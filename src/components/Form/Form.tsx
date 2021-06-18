@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input, Button } from 'antd';
+import SubmitResult from '../SubmitResult/SubmitResult';
 import 'antd/dist/antd.css';
 import './Form.css';
 
@@ -12,19 +13,20 @@ const tailLayout = {
 };
 
 const FormComponent = () => {
-  const [requestStatus, setRequestStatus] = useState<number>(0);
-
+  const [requestStatus, setRequestStatus] = useState<number | null>(null);
   const onFinish = (values: any) => {
     console.log('Success:', values);
     fetch('https://jsonplaceholder.typicode.com/todos/1')
       .then((response) => {
         response.json();
+        console.log(response.status);
         setRequestStatus(response.status);
       })
       .then((json) => console.log(json));
   };
-  if (requestStatus >= 400) return <div> Компонента с такое себе </div>;
-  if (requestStatus < 400 && requestStatus > 1) return <div> Компонента с огонь </div>;
+
+  if (requestStatus) return <SubmitResult status={requestStatus} />;
+
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
