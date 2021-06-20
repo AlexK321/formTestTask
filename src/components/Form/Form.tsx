@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { Form, Input, Button } from 'antd';
-import SubmitResult from '../SubmitResult/SubmitResult';
 import 'antd/dist/antd.css';
 import './Form.css';
+import { ValidateErrorEntity } from 'rc-field-form/lib/interface';
+import SubmitResult from '../SubmitResult/SubmitResult';
 
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
+interface ValuesType {
+  email: string | undefined;
+  telephone: string | undefined;
+  userName: string | undefined;
+}
 
-const FormComponent = () => {
+const labelCol = { span: 8 };
+const wrapperCol = { span: 16 };
+
+const wrapperColForButton = { offset: 8, span: 16 };
+
+const FormComponent = (): ReactElement => {
   const [requestStatus, setRequestStatus] = useState<number | null>(null);
-  const onFinish = (values: any) => {
+  const onFinish = (values: ValuesType) => {
     console.log('Success:', values);
     fetch('https://jsonplaceholder.typicode.com/todos/1')
       .then((response) => {
@@ -26,14 +30,14 @@ const FormComponent = () => {
   };
 
   if (requestStatus) return <SubmitResult status={requestStatus} />;
-
-  const onFinishFailed = (errorInfo: any) => {
+  const onFinishFailed = (errorInfo: ValidateErrorEntity<ValuesType>) => {
     console.log('Failed:', errorInfo);
   };
 
   return (
     <Form
-      {...layout}
+      labelCol={labelCol}
+      wrapperCol={wrapperCol}
       name="basic"
       initialValues={{ remember: true }}
       onFinish={onFinish}
@@ -41,12 +45,14 @@ const FormComponent = () => {
     >
       <h2>Контакты</h2>
       <Form.Item
+        noStyle
         name="username"
         rules={[{ required: true, message: 'Please input your username!' }]}
       >
         <Input placeholder="Ваше имя" />
       </Form.Item>
       <Form.Item
+        style={{ width: '100%' }}
         name="telephone"
         rules={[{ required: true, message: 'Please input your username!' }]}
       >
@@ -56,7 +62,7 @@ const FormComponent = () => {
         <Input placeholder="E-mail" />
       </Form.Item>
 
-      <Form.Item {...tailLayout}>
+      <Form.Item wrapperCol={wrapperColForButton} style={{ width: '100%' }}>
         <Button type="primary" htmlType="submit">
           Отправить заявку
         </Button>

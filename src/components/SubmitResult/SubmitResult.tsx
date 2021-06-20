@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import 'antd/dist/antd.css';
 import './SubmitResult.css';
 
@@ -6,7 +6,7 @@ interface ParamTypes {
   status: number;
 }
 
-const SubmitResult = ({ status }: ParamTypes): any => {
+const SubmitResult = ({ status }: ParamTypes): ReactElement => {
   console.log(status);
   let description = '';
   if (status > 399) {

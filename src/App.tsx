@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import './App.css';
 import FormComponent from './components/Form/Form';
 
-function App() {
+const App = (): ReactElement => {
   return (
     <div className="wrapper">
       <div className="form_wrapper">
@@ -15,6 +15,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;
