@@ -1,17 +1,17 @@
 import React, { ReactElement } from 'react';
 import './App.css';
-import FormComponent from './components/Form/Form';
+import Form from './components/Form/Form';
 
 const App = (): ReactElement => {
   return (
     <div className="wrapper">
-      <div className="form_wrapper">
-        <h1 className="form_title">Заявка на участие</h1>
-        <h2 className="form_description">
+      <div className="form-wrapper">
+        <h1 className="form-title">Заявка на участие</h1>
+        <h2 className="form-description">
           Расскажите о проекте, его ценности для бизнеса, оставьте информацию о компании и
           контакты,чтобы мы могли с вами связаться
         </h2>
-        <FormComponent />
+        <Form />
       </div>
     </div>
   );
