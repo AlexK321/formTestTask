@@ -1,6 +1,5 @@
 import React, { ChangeEvent, ReactElement } from 'react';
 import { Form, Input } from 'antd';
-import 'antd/dist/antd.css';
 import './FormItem.css';
 
 interface Props {

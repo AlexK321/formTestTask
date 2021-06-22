@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react';
-import 'antd/dist/antd.css';
 import './SubmitResult.css';
 
 interface ParamTypes {

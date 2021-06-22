@@ -1,6 +1,5 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
 import { Form as FormComponent, Button } from 'antd';
-import 'antd/dist/antd.css';
 import './Form.css';
 import axios from 'axios';
 import SubmitResult from '../SubmitResult/SubmitResult';
@@ -11,18 +10,10 @@ interface FormDataType {
   phoneNumber?: string;
   userName?: string;
 }
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-//const axios = require('axios').default;
 
 const formItemsNames: Array<string> = ['userName', 'phoneNumber', 'email'];
 const labelCol = { span: 8 };
 const wrapperCol = { span: 16 };
-
-const initialValues: FormDataType = {
-  userName: localStorage.getItem(formItemsNames[2]) || '',
-  phoneNumber: localStorage.getItem(formItemsNames[1]) || '',
-  email: localStorage.getItem(formItemsNames[0]) || '',
-};
 
 const rules = [
   { required: true, message: 'Поле не должно быть пустым' },
@@ -33,6 +24,12 @@ const rules = [
 ];
 
 const Form = (): ReactElement => {
+  const [initialValues, setInitialValues] = useState<FormDataType>({
+    userName: localStorage.getItem(formItemsNames[0]) || '',
+    phoneNumber: localStorage.getItem(formItemsNames[1]) || '',
+    email: localStorage.getItem(formItemsNames[2]) || '',
+  });
+
   useEffect(() => {
     const url = new URL(window.location.href);
     const filled = url.searchParams.get('filled');
@@ -40,19 +37,12 @@ const Form = (): ReactElement => {
       url.searchParams.delete('filled');
       document.location.href = url.toString();
     } else {
-      console.log(Object.keys(initialValues));
+      const formFields = Object.keys(initialValues);
+      formFields.forEach((item: string, index) => {
+        if (index + 1 > Number(filled)) setInitialValues({ ...initialValues, [item]: '' });
+      });
     }
-    switch (filled) {
-      case '1':
-        initialValues.phoneNumber = '';
-        initialValues.email = '';
-        break;
-      case '2':
-        initialValues.email = '';
-        break;
-      default:
-        break;
-    }
+    console.log(initialValues);
   }, []);
 
   const [requestStatus, setRequestStatus] = useState<number | null>(null);
@@ -75,6 +65,7 @@ const Form = (): ReactElement => {
   };
 
   if (requestStatus) return <SubmitResult status={requestStatus} />;
+  console.log(initialValues);
 
   return (
     <FormComponent
@@ -85,17 +76,23 @@ const Form = (): ReactElement => {
     >
       <h2>Контакты</h2>
       <FormItem name="userName" placeholder="Ваше имя" handleChange={handleChange} rules={rules} />
-      <FormItem
-        name="phoneNumber"
-        placeholder="Телефон"
-        handleChange={handleChange}
-        rules={rules}
-      />
-      <FormItem name="email" placeholder="E-mail" handleChange={handleChange} rules={rules} />
-      <Button type="primary" htmlType="submit">
-        Отправить заявку
-      </Button>
-      <p>Нажимая на кнопку «Отправить заявку», вы соглашаетесь на обработку персональных данных</p>
+      <div className="form-row">
+        <FormItem
+          name="phoneNumber"
+          placeholder="Телефон"
+          handleChange={handleChange}
+          rules={rules}
+        />
+        <FormItem name="email" placeholder="E-mail" handleChange={handleChange} rules={rules} />
+      </div>
+      <div className="form-row">
+        <Button type="primary" htmlType="submit">
+          Отправить заявку
+        </Button>
+        <p>
+          Нажимая на кнопку «Отправить заявку», вы соглашаетесь на обработку персональных данных
+        </p>
+      </div>
     </FormComponent>
   );
 };
