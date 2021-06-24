@@ -1,11 +1,11 @@
-import React, { ReactElement } from 'react';
+import React, { FC } from 'react';
 import './SubmitResult.css';
 
 interface ParamTypes {
   status: number;
 }
 
-const SubmitResult = ({ status }: ParamTypes): ReactElement => {
+const SubmitResult: FC<ParamTypes> = ({ status }) => {
   const description =
     status > 399
       ? `Данные формы не отправлены. Ошибка: ${status}`

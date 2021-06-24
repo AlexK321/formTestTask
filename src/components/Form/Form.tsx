@@ -1,89 +1,80 @@
-import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { Form as FormComponent, Button } from 'antd';
 import './Form.css';
 import axios from 'axios';
 import SubmitResult from '../SubmitResult/SubmitResult';
 import FormItem from '../FormItem/FormItem';
 
-interface FormDataType {
+interface FormData {
   email?: string;
   phoneNumber?: string;
   userName?: string;
 }
 
-const formItemsNames: Array<string> = ['userName', 'phoneNumber', 'email'];
+const userName = 'userName';
+const phoneNumber = 'phoneNumber';
+const email = 'email';
 const labelCol = { span: 8 };
 const wrapperCol = { span: 16 };
 
-const rules = [
-  { required: true, message: 'Поле не должно быть пустым' },
-  {
-    max: 10,
-    message: `Максимальная длинна строки - 10 символов`,
-  },
-];
+const initialValue = {
+  userName: localStorage.getItem(userName) || '',
+  phoneNumber: localStorage.getItem(phoneNumber) || '',
+  email: localStorage.getItem(email) || '',
+};
+
+const changeInitialValue = (initialValue1: FormData, filled1: string | null) => {
+  const initialValueArr = Object.entries(initialValue1);
+  for (let i = Number(filled1); i < initialValueArr.length; i += 1) {
+    initialValueArr[i][1] = '';
+  }
+  return Object.fromEntries(initialValueArr);
+};
+
+const getInitialValuesForm = () => {
+  const url = new URL(window.location.href);
+  const filled = url.searchParams.get('filled');
+  if (filled === '0') {
+    url.searchParams.delete('filled');
+    document.location.href = url.toString();
+  } else if (Number(filled) > 0) {
+    return changeInitialValue(initialValue, filled);
+  }
+  return initialValue;
+};
 
 const Form = (): ReactElement => {
-  const [initialValues, setInitialValues] = useState<FormDataType>({
-    userName: localStorage.getItem(formItemsNames[0]) || '',
-    phoneNumber: localStorage.getItem(formItemsNames[1]) || '',
-    email: localStorage.getItem(formItemsNames[2]) || '',
-  });
-
-  useEffect(() => {
-    const url = new URL(window.location.href);
-    const filled = url.searchParams.get('filled');
-    if (filled === '0') {
-      url.searchParams.delete('filled');
-      document.location.href = url.toString();
-    } else {
-      const formFields = Object.keys(initialValues);
-      formFields.forEach((item: string, index) => {
-        if (index + 1 > Number(filled)) setInitialValues({ ...initialValues, [item]: '' });
-      });
-    }
-    console.log(initialValues);
-  }, []);
-
   const [requestStatus, setRequestStatus] = useState<number | null>(null);
 
-  const createRequest = async (formData: FormDataType) => {
+  const sendFormData = async (formData: FormData) => {
     try {
-      const resp = await axios.post('https://jsonplaceholder.typicode.com/posts', formData);
-      setRequestStatus(resp.status);
+      const response = await axios.post('https://jsonplaceholder.typicode.com/posts', formData);
+      setRequestStatus(response.status);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const onFinish = (formData: FormDataType) => {
-    createRequest(formData);
-  };
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    localStorage.setItem(event.target.name, event.target.value);
+  const handleChange = (value: FormData): void => {
+    const q = Object.entries(value);
+    localStorage.setItem(String(q[0][0]), String(q[0][1]));
   };
 
   if (requestStatus) return <SubmitResult status={requestStatus} />;
-  console.log(initialValues);
 
   return (
     <FormComponent
       labelCol={labelCol}
       wrapperCol={wrapperCol}
-      initialValues={initialValues}
-      onFinish={onFinish}
+      initialValues={getInitialValuesForm()}
+      onFinish={sendFormData}
+      onValuesChange={handleChange}
     >
       <h2>Контакты</h2>
-      <FormItem name="userName" placeholder="Ваше имя" handleChange={handleChange} rules={rules} />
+      <FormItem name="userName" placeholder="Ваше имя" />
       <div className="form-row">
-        <FormItem
-          name="phoneNumber"
-          placeholder="Телефон"
-          handleChange={handleChange}
-          rules={rules}
-        />
-        <FormItem name="email" placeholder="E-mail" handleChange={handleChange} rules={rules} />
+        <FormItem name="phoneNumber" placeholder="Телефон" />
+        <FormItem name="email" placeholder="E-mail" />
       </div>
       <div className="form-row">
         <Button type="primary" htmlType="submit">

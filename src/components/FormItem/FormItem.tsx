@@ -1,18 +1,26 @@
-import React, { ChangeEvent, ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import { Form, Input } from 'antd';
 import './FormItem.css';
 
 interface Props {
   name: string | undefined;
   placeholder: string | undefined;
-  handleChange(e: ChangeEvent<HTMLInputElement>): void;
-  rules: Array<any>;
+  rules?: Array<any>;
 }
 
-const FormItem = ({ name, placeholder, handleChange, rules }: Props): ReactElement => {
+const defaultRules = [
+  { required: true, message: 'Поле не должно быть пустым' },
+  {
+    max: 10,
+    message: `Максимальная длинна строки - 10 символов`,
+  },
+];
+
+const FormItem = ({ name, placeholder, rules }: Props): ReactElement => {
+  const rulesItem = rules || defaultRules;
   return (
-    <Form.Item name={name} rules={rules}>
-      <Input name={name} placeholder={placeholder} onChange={handleChange} />
+    <Form.Item name={name} rules={rulesItem}>
+      <Input name={name} placeholder={placeholder} />
     </Form.Item>
   );
 };
