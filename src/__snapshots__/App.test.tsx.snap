@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test App component snapshot component 1`] = `
+<div
+  className="wrapper"
+>
+  <div
+    className="form-wrapper"
+  >
+    <h1
+      className="form-title"
+    >
+      Заявка на участие
+    </h1>
+    <h2
+      className="form-description"
+    >
+      Расскажите о проекте, его ценности для бизнеса, оставьте информацию о компании и контакты,чтобы мы могли с вами связаться
+    </h2>
+    <Form />
+  </div>
+</div>
+`;
+
+exports[`test Form component snapshot component 1`] = `
+<ForwardRef(InternalForm)
+  initialValues={
+    Object {
+      "email": "",
+      "phoneNumber": "",
+      "userName": "",
+    }
+  }
+  labelCol={
+    Object {
+      "span": 8,
+    }
+  }
+  onFinish={[Function]}
+  onValuesChange={[Function]}
+  wrapperCol={
+    Object {
+      "span": 16,
+    }
+  }
+>
+  <h2>
+    Контакты
+  </h2>
+  <FormItem
+    name="userName"
+    placeholder="Ваше имя"
+  />
+  <div
+    className="form-row"
+  >
+    <FormItem
+      name="phoneNumber"
+      placeholder="Телефон"
+    />
+    <FormItem
+      name="email"
+      placeholder="E-mail"
+    />
+  </div>
+  <div
+    className="form-row"
+  >
+    <Button
+      htmlType="submit"
+      type="primary"
+    >
+      Отправить заявку
+    </Button>
+    <p>
+      Нажимая на кнопку «Отправить заявку», вы соглашаетесь на обработку персональных данных
+    </p>
+  </div>
+</ForwardRef(InternalForm)>
+`;
+
+exports[`test SubmitResult component snapshot component 1`] = `
+<div
+  className="result-block"
+>
+  <h2>
+    Данные формы отправлены успешно. Статус ответа: undefined
+  </h2>
+</div>
+`;

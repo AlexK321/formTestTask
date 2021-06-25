@@ -55,9 +55,9 @@ const Form = (): ReactElement => {
     }
   };
 
-  const handleChange = (value: FormData): void => {
-    const q = Object.entries(value);
-    localStorage.setItem(String(q[0][0]), String(q[0][1]));
+  const handleChange = (formData: FormData): void => {
+    const formDataArray = Object.entries(formData);
+    localStorage.setItem(String(formDataArray[0][0]), String(formDataArray[0][1]));
   };
 
   if (requestStatus) return <SubmitResult status={requestStatus} />;
