@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test SubmitResult component snapshot component 1`] = `
+<div
+  className="result-block"
+>
+  <h2>
+    Данные формы отправлены успешно
+  </h2>
+</div>
+`;

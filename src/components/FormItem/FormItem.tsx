@@ -1,14 +1,14 @@
-import React, { ReactElement } from 'react';
+import React, { FC } from 'react';
 import { Form, Input } from 'antd';
 import './FormItem.css';
 
 interface Props {
-  name: string | undefined;
-  placeholder: string | undefined;
-  rules?: Array<any>;
+  name?: string;
+  placeholder?: string;
+  rules?: Array<any>; // remove any
 }
 
-const defaultRules = [
+const DEFAULT_RULES = [
   { required: true, message: 'Поле не должно быть пустым' },
   {
     max: 10,
@@ -16,13 +16,12 @@ const defaultRules = [
   },
 ];
 
-const FormItem = ({ name, placeholder, rules }: Props): ReactElement => {
-  const rulesItem = rules || defaultRules;
-  return (
-    <Form.Item name={name} rules={rulesItem}>
-      <Input name={name} placeholder={placeholder} />
-    </Form.Item>
-  );
-};
+//webstorm - Ctr+alt+O - vscode analogs
+
+const FormItem: FC<Props> = ({ name, placeholder, rules = DEFAULT_RULES }) => (
+  <Form.Item name={name} rules={rules}>
+    <Input name={name} placeholder={placeholder} />
+  </Form.Item>
+);
 
 export default FormItem;

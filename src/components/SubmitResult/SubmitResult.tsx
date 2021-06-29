@@ -2,14 +2,11 @@ import React, { FC } from 'react';
 import './SubmitResult.css';
 
 interface ParamTypes {
-  status: number;
+  hasError: boolean;
 }
 
-const SubmitResult: FC<ParamTypes> = ({ status }) => {
-  const description =
-    status > 399
-      ? `Данные формы не отправлены. Ошибка: ${status}`
-      : `Данные формы отправлены успешно. Статус ответа: ${status}`;
+const SubmitResult: FC<ParamTypes> = ({ hasError }) => {
+  const description = hasError ? `Данные формы не отправлены` : `Данные формы отправлены успешно`;
 
   return (
     <div className="result-block">

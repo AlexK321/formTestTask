@@ -29,7 +29,7 @@
     "start": "npm run build-css && run-p -ncr watch-css start-js",
     "build": "react-scripts build",
     "lint": "eslint --ext .ts,.tsx src --fix",
-    "test": "react-scripts test",
+    "test": "react-scripts test --coverage",
     "eject": "react-scripts eject",
     "build-css": "node-less-chokidar src",
     "watch-css": "node-less-chokidar src --watch",
@@ -59,6 +59,7 @@
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.21.5",
     "prettier": "^2.1.2"

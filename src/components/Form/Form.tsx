@@ -1,7 +1,8 @@
-import React, { ReactElement, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Form as FormComponent, Button } from 'antd';
-import './Form.css';
 import axios from 'axios';
+import { USER_NAME, PHONE_NUMBER, EMAIL, labelCol, wrapperCol } from './constants';
+import './Form.css';
 import SubmitResult from '../SubmitResult/SubmitResult';
 import FormItem from '../FormItem/FormItem';
 
@@ -11,70 +12,69 @@ interface FormData {
   userName?: string;
 }
 
-const userName = 'userName';
-const phoneNumber = 'phoneNumber';
-const email = 'email';
-const labelCol = { span: 8 };
-const wrapperCol = { span: 16 };
-
 const initialValue = {
-  userName: localStorage.getItem(userName) || '',
-  phoneNumber: localStorage.getItem(phoneNumber) || '',
-  email: localStorage.getItem(email) || '',
+  userName: localStorage.getItem(USER_NAME) || '',
+  phoneNumber: localStorage.getItem(PHONE_NUMBER) || '',
+  email: localStorage.getItem(EMAIL) || '',
 };
 
-const changeInitialValue = (initialValue1: FormData, filled1: string | null) => {
-  const initialValueArr = Object.entries(initialValue1);
-  for (let i = Number(filled1); i < initialValueArr.length; i += 1) {
-    initialValueArr[i][1] = '';
-  }
-  return Object.fromEntries(initialValueArr);
+export const changeInitialValue = (formData: FormData, filled: number): FormData => {
+  const filteredFormData = Object.entries(formData).slice(0, filled);
+
+  return Object.fromEntries(filteredFormData);
 };
 
-const getInitialValuesForm = () => {
+export const getInitialValues = (formData: FormData): FormData => {
   const url = new URL(window.location.href);
-  const filled = url.searchParams.get('filled');
-  if (filled === '0') {
+  const filled = Number(url.searchParams.get('filled'));
+  const maxItems = Object.entries(formData).length;
+
+  if (filled && (filled === 0 || filled > maxItems)) {
     url.searchParams.delete('filled');
     document.location.href = url.toString();
-  } else if (Number(filled) > 0) {
-    return changeInitialValue(initialValue, filled);
+  } else if (filled > 0) {
+    return changeInitialValue(formData, filled);
   }
-  return initialValue;
+
+  return formData;
 };
 
-const Form = (): ReactElement => {
-  const [requestStatus, setRequestStatus] = useState<number | null>(null);
+const Form: FC = () => {
+  const [hasError, setError] = useState<boolean | null>(null);
 
   const sendFormData = async (formData: FormData) => {
     try {
-      const response = await axios.post('https://jsonplaceholder.typicode.com/posts', formData);
-      setRequestStatus(response.status);
-    } catch (err) {
-      console.error(err);
+      await axios.post('https://jsonplaceholder.typicode.com/posts', formData);
+      setError(false);
+    } catch (error) {
+      setError(true);
     }
   };
 
   const handleChange = (formData: FormData): void => {
-    const formDataArray = Object.entries(formData);
-    localStorage.setItem(String(formDataArray[0][0]), String(formDataArray[0][1]));
+    const formDataEntries = Object.entries(formData);
+    const [key, value] = formDataEntries[0];
+
+    localStorage.setItem(key, value);
   };
 
-  if (requestStatus) return <SubmitResult status={requestStatus} />;
+  if (hasError !== null) {
+    return <SubmitResult hasError={hasError} />;
+  }
 
   return (
     <FormComponent
       labelCol={labelCol}
       wrapperCol={wrapperCol}
-      initialValues={getInitialValuesForm()}
+      initialValues={getInitialValues(initialValue)}
       onFinish={sendFormData}
       onValuesChange={handleChange}
     >
       <h2>Контакты</h2>
-      <FormItem name="userName" placeholder="Ваше имя" />
+      <FormItem name={USER_NAME} placeholder="Ваше имя" />
       <div className="form-row">
-        <FormItem name="phoneNumber" placeholder="Телефон" />
-        <FormItem name="email" placeholder="E-mail" />
+        <FormItem name={PHONE_NUMBER} placeholder="Телефон" />
+        <FormItem name={EMAIL} placeholder="E-mail" />
       </div>
       <div className="form-row">
         <Button type="primary" htmlType="submit">
