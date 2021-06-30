@@ -29,7 +29,7 @@ describe('test', () => {
   });
 
   // на макс длину
-  it('check object min length', () => {
+  it('check object max length', () => {
     expect(Object.keys(initialValues).length).not.toBeGreaterThanOrEqual(10);
   });
 
