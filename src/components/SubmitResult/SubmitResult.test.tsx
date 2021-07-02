@@ -4,7 +4,7 @@ import SubmitResult from './SubmitResult';
 
 describe('Component: SubmitResult', () => {
   const setUp = (props?: any) => shallow(<SubmitResult {...props} />);
-  let component: any = null;
+  let component: any;
 
   beforeEach(() => {
     component = setUp();

@@ -1,10 +1,11 @@
 import React, { FC, useState } from 'react';
 import { Form as FormComponent, Button } from 'antd';
 import axios from 'axios';
-import { USER_NAME, PHONE_NUMBER, EMAIL, labelCol, wrapperCol } from './constants';
+import { USER_NAME, PHONE_NUMBER, EMAIL, POST_URL, LABEL_COL, WRAPPER_COL } from './constants';
 import './Form.css';
 import SubmitResult from '../SubmitResult/SubmitResult';
 import FormItem from '../FormItem/FormItem';
+import getInitialValues from './getInitialValue';
 
 interface FormData {
   email?: string;
@@ -18,33 +19,12 @@ const initialValue = {
   email: localStorage.getItem(EMAIL) || '',
 };
 
-export const changeInitialValue = (formData: FormData, filled: number): FormData => {
-  const filteredFormData = Object.entries(formData).slice(0, filled);
-
-  return Object.fromEntries(filteredFormData);
-};
-
-export const getInitialValues = (formData: FormData): FormData => {
-  const url = new URL(window.location.href);
-  const filled = Number(url.searchParams.get('filled'));
-  const maxItems = Object.entries(formData).length;
-
-  if (filled && (filled === 0 || filled > maxItems)) {
-    url.searchParams.delete('filled');
-    document.location.href = url.toString();
-  } else if (filled > 0) {
-    return changeInitialValue(formData, filled);
-  }
-
-  return formData;
-};
-
 const Form: FC = () => {
   const [hasError, setError] = useState<boolean | null>(null);
 
   const sendFormData = async (formData: FormData) => {
     try {
-      await axios.post('https://jsonplaceholder.typicode.com/posts', formData);
+      await axios.post(POST_URL, formData);
       setError(false);
     } catch (error) {
       setError(true);
@@ -64,8 +44,8 @@ const Form: FC = () => {
 
   return (
     <FormComponent
-      labelCol={labelCol}
-      wrapperCol={wrapperCol}
+      labelCol={LABEL_COL}
+      wrapperCol={WRAPPER_COL}
       initialValues={getInitialValues(initialValue)}
       onFinish={sendFormData}
       onValuesChange={handleChange}

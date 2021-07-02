@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: FormItem should match snapshot 1`] = `
+<FormItem
+  rules={
+    Array [
+      Object {
+        "message": "Поле не должно быть пустым",
+        "required": true,
+      },
+      Object {
+        "max": 10,
+        "message": "Максимальная длинна строки - 10 символов",
+      },
+    ]
+  }
+>
+  <Input
+    type="text"
+  />
+</FormItem>
+`;

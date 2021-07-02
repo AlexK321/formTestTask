@@ -1,14 +1,14 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import axios from 'axios';
-import Form, { changeInitialValue, getInitialValues } from './Form';
+import Form from './Form';
 import SubmitResult from '../SubmitResult/SubmitResult';
 
 jest.mock('axios');
 
 describe('Component: Form', () => {
   const setUp = (props?: any) => shallow(<Form {...props} />);
-  let component: any = null;
+  let component: any;
 
   beforeEach(() => {
     component = setUp();
@@ -81,56 +81,14 @@ describe('Component: Form', () => {
     });
   });
 
-  describe('when change formData', () => {
-    const initialValue = {
-      userName: 'userName',
-      phoneNumber: 'phoneNumber',
-      email: 'email',
-    };
-
-    it('should change formData', () => {
-      expect(changeInitialValue(initialValue, 1)).toEqual({
-        email: '',
-        phoneNumber: '',
-        userName: 'userName',
-      });
-      expect(changeInitialValue(initialValue, 2)).toEqual({
-        email: '',
-        phoneNumber: 'phoneNumber',
-        userName: 'userName',
-      });
-      expect(changeInitialValue(initialValue, 3)).toEqual({
-        email: 'email',
-        phoneNumber: 'phoneNumber',
-        userName: 'userName',
-      });
-    });
-  });
-
-  //  27-37
-  describe('when get filled from url and change formData', () => {
-    it('should change localStorage', () => {
-      const initialValue = {
-        userName: 'userName',
-        phoneNumber: 'phoneNumber',
-        email: 'email',
-      };
-
-      expect(getInitialValues(initialValue)).toEqual(initialValue);
-    });
-  });
-
-  //  54-59
   describe('when change input', () => {
-    beforeEach(() => {
-      component.simulate('valuesChange', {
-        email: 'emailValue',
-      });
-    });
+    component = shallow(<Form />);
 
     it('should change localStorage', () => {
-      expect(localStorage.getItem('email')).toBe('emailValue');
-      // expect(localStorage.getItem.mock.calls.length).toBe(1)
+      component.simulate('valuesChange', {
+        email: 'e',
+      });
+      expect(localStorage.setItem).toHaveBeenCalledTimes(1);
     });
   });
 });

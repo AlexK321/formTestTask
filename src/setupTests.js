@@ -16,13 +16,20 @@ Object.defineProperty(window, 'getComputedStyle', {
     getPropertyValue: () => false,
   }),
 });
+/* eslint-disable no-proto*/
+jest.spyOn(window.localStorage.__proto__, 'setItem');
+window.localStorage.__proto__.setItem = jest.fn();
 
-const localStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  clear: jest.fn(),
+const localStorageMock = () => {
+  return {
+    getItem: jest.fn(),
+    setItem: jest.fn(),
+    clear: jest.fn(),
+  };
 };
 
-global.localStorage = localStorageMock;
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock(),
+});
 
 Enzyme.configure({ adapter: new Adapter() });
