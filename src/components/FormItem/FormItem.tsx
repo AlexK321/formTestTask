@@ -1,11 +1,12 @@
 import React, { FC } from 'react';
 import { Form, Input } from 'antd';
 import './FormItem.css';
+import { Rule } from 'antd/lib/form';
 
 interface Props {
   name?: string;
   placeholder?: string;
-  rules?: Array<any>; // remove any
+  rules?: Rule[]; // remove any
 }
 
 const DEFAULT_RULES = [

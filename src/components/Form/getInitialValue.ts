@@ -12,19 +12,20 @@ export const changeInitialValue = (formData: FormData, filled: number): FormData
   return Object.fromEntries(filteredFormData);
 };
 
-const getInitialValues = (formData: FormData): any => {
+const getInitialValues = (formData: FormData): FormData => {
+  let finalFormData = formData;
   const url = new URL(window.location.href);
   const filled = Number(url.searchParams.get(FILLED));
   const maxItems = Object.entries(formData).length;
 
-  if (url.searchParams.has(FILLED) && (filled === 0 || filled > maxItems)) {
+  if (filled > 0 && filled <= maxItems) {
+    finalFormData = changeInitialValue(formData, filled);
+  } else if (url.searchParams.has(FILLED)) {
     url.searchParams.delete(FILLED);
     window.location.href = url.toString();
-  } else if (filled > 0 && filled <= maxItems) {
-    return changeInitialValue(formData, filled);
   }
 
-  return formData;
+  return finalFormData;
 };
 
 export default getInitialValues;

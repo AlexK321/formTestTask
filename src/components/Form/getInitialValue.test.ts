@@ -1,7 +1,5 @@
 import getInitialValues, { changeInitialValue } from './getInitialValue';
 
-Object.fromEntries = (l: any[]) => l.reduce((a, [k, v]) => ({ ...a, [k]: v }), {});
-
 describe('when get filled from url and change formData', () => {
   describe('when filled > 0 && filled < maxItems', () => {
     beforeEach(() => {

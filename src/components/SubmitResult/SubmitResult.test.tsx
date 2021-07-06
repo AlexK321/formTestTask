@@ -1,50 +1,36 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
 import SubmitResult from './SubmitResult';
 
+interface ParamTypes {
+  hasError: boolean;
+}
+
 describe('Component: SubmitResult', () => {
-  const setUp = (props?: any) => shallow(<SubmitResult {...props} />);
-  let component: any;
+  const setUp = (props?: ParamTypes) => shallow(<SubmitResult {...props} />);
+  let component: ShallowWrapper;
 
   beforeEach(() => {
     component = setUp();
   });
 
-  describe('when render elements', () => {
-    it('check existence component', () => {
-      expect(component).toBeTruthy();
-    });
+  it('should contain .result-block', () => {
+    const wrapper = component.find('.result-block');
 
-    it('should contain .result-block', () => {
-      const wrapper = component.find('.result-block');
-
-      expect(wrapper).toHaveLength(1);
-    });
-
-    it('snapshot component', () => {
-      expect(component).toMatchSnapshot();
-    });
+    expect(wrapper).not.toBeNull();
   });
 
-  describe('when there are props', () => {
-    it('should render negative response', () => {
-      const responseMessage = 'Данные формы не отправлены';
-      const hasError = true;
+  it('match snapshot component', () => {
+    expect(component).toMatchSnapshot();
+  });
 
-      component = shallow(<SubmitResult hasError={hasError} />);
-      const description = component.find('h2');
+  it.each([
+    { responseMessage: 'Данные формы не отправлены', hasError: true },
+    { responseMessage: 'Данные формы отправлены успешно', hasError: false },
+  ])('should render negative response', ({ responseMessage, hasError }) => {
+    component = shallow(<SubmitResult hasError={hasError} />);
+    const description = component.find('h2');
 
-      expect(description.text()).toBe(responseMessage);
-    });
-
-    it('should render positive response', () => {
-      const responseMessage = 'Данные формы отправлены успешно';
-      const hasError = false;
-
-      component = shallow(<SubmitResult hasError={hasError} />);
-      const description = component.find('h2');
-
-      expect(description.text()).toBe(responseMessage);
-    });
+    expect(description.text()).toBe(responseMessage);
   });
 });

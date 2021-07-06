@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
 import axios from 'axios';
 import Form from './Form';
 import SubmitResult from '../SubmitResult/SubmitResult';
@@ -7,20 +7,10 @@ import SubmitResult from '../SubmitResult/SubmitResult';
 jest.mock('axios');
 
 describe('Component: Form', () => {
-  const setUp = (props?: any) => shallow(<Form {...props} />);
-  let component: any;
+  let component: ShallowWrapper;
 
   beforeEach(() => {
-    component = setUp();
-  });
-
-  const consentDataProcessing =
-    'Нажимая на кнопку «Отправить заявку», вы соглашаетесь на обработку персональных данных';
-
-  describe('when request status is null', () => {
-    it('should match snapshot', () => {
-      expect(component).toMatchSnapshot();
-    });
+    component = shallow(<Form />);
   });
 
   describe('when request status exists', () => {
@@ -49,6 +39,7 @@ describe('Component: Form', () => {
 
     beforeEach(() => {
       (axios.post as jest.Mock).mockRejectedValue({ status });
+      component.update();
     });
 
     describe('when form is finished with result ', () => {
@@ -65,29 +56,28 @@ describe('Component: Form', () => {
     });
   });
 
-  describe('when render elements', () => {
-    it('should render title', () => {
-      expect(component.text()).toContain(consentDataProcessing);
-    });
+  it('should render title', () => {
+    const consentDataProcessing =
+      'Нажимая на кнопку «Отправить заявку», вы соглашаетесь на обработку персональных данных';
+    const wrapper = component.find('.form-description');
 
-    it('should render button', () => {
-      const wrapper = component.find('Button');
+    expect(wrapper.text()).toBe(consentDataProcessing);
+  });
 
-      expect(wrapper).toHaveLength(1);
-    });
+  it('should render button', () => {
+    const wrapper = component.find('Button');
 
-    it('snapshot component', () => {
-      expect(component).toMatchSnapshot();
-    });
+    expect(wrapper).not.toBeNull();
   });
 
   describe('when change input', () => {
-    component = shallow(<Form />);
-
-    it('should change localStorage', () => {
+    beforeEach(() => {
       component.simulate('valuesChange', {
         email: 'e',
       });
+    });
+
+    it('should change localStorage', () => {
       expect(localStorage.setItem).toHaveBeenCalledTimes(1);
     });
   });

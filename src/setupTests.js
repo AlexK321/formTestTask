@@ -1,5 +1,4 @@
 import '@testing-library/jest-dom';
-
 import Enzyme from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 
@@ -11,25 +10,14 @@ Object.defineProperty(window, 'matchMedia', {
   }),
 });
 
-Object.defineProperty(window, 'getComputedStyle', {
-  value: () => ({
-    getPropertyValue: () => false,
-  }),
-});
-/* eslint-disable no-proto*/
-jest.spyOn(window.localStorage.__proto__, 'setItem');
-window.localStorage.__proto__.setItem = jest.fn();
+Object.fromEntries = (l) => l.reduce((a, [k, v]) => ({ ...a, [k]: v }), {});
 
-const localStorageMock = () => {
-  return {
+Object.defineProperty(window, 'localStorage', {
+  value: {
     getItem: jest.fn(),
     setItem: jest.fn(),
     clear: jest.fn(),
-  };
-};
-
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock(),
+  },
 });
 
 Enzyme.configure({ adapter: new Adapter() });

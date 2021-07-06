@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import './SubmitResult.css';
 
 interface ParamTypes {
-  hasError: boolean;
+  hasError?: boolean;
 }
 
 const SubmitResult: FC<ParamTypes> = ({ hasError }) => {

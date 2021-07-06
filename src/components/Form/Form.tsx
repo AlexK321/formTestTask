@@ -60,7 +60,7 @@ const Form: FC = () => {
         <Button type="primary" htmlType="submit">
           Отправить заявку
         </Button>
-        <p>
+        <p className="form-description">
           Нажимая на кнопку «Отправить заявку», вы соглашаетесь на обработку персональных данных
         </p>
       </div>

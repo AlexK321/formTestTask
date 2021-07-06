@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Component: SubmitResult when render elements snapshot component 1`] = `
+exports[`Component: SubmitResult match snapshot component 1`] = `
 <div
   className="result-block"
 >
@@ -10,7 +10,17 @@ exports[`Component: SubmitResult when render elements snapshot component 1`] = `
 </div>
 `;
 
-exports[`test SubmitResult component snapshot component 1`] = `
+exports[`Component: SubmitResult snapshot component 1`] = `
+<div
+  className="result-block"
+>
+  <h2>
+    Данные формы отправлены успешно
+  </h2>
+</div>
+`;
+
+exports[`Component: SubmitResult when render elements snapshot component 1`] = `
 <div
   className="result-block"
 >
