@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
-import './App.css';
+import './App.less';
 import Form from './components/Form/Form';
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.less';
 
 const App = (): ReactElement => {
   return (

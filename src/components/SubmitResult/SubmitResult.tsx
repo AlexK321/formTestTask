@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import './SubmitResult.css';
+import './SubmitResult.less';
 
 interface ParamTypes {
   hasError?: boolean;

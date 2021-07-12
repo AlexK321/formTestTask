@@ -65,15 +65,15 @@ describe('Component: Form', () => {
   });
 
   it('should render button', () => {
-    const wrapper = component.find('Button');
+    const button = component.find('Button');
 
-    expect(wrapper).not.toBeNull();
+    expect(button).not.toBeNull();
   });
 
   describe('when change input', () => {
     beforeEach(() => {
       component.simulate('valuesChange', {
-        email: 'e',
+        email: 'test email',
       });
     });
 

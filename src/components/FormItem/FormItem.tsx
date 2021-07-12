@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Form, Input } from 'antd';
-import './FormItem.css';
+import './FormItem.less';
 import { Rule } from 'antd/lib/form';
 
 interface Props {

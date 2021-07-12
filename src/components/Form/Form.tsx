@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import { Form as FormComponent, Button } from 'antd';
 import axios from 'axios';
 import { USER_NAME, PHONE_NUMBER, EMAIL, POST_URL, LABEL_COL, WRAPPER_COL } from './constants';
-import './Form.css';
+import './Form.less';
 import SubmitResult from '../SubmitResult/SubmitResult';
 import FormItem from '../FormItem/FormItem';
 import getInitialValues from './getInitialValue';
