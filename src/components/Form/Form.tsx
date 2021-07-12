@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Form as FormComponent, Button } from 'antd';
+import Search from 'antd/lib/input/Search';
 import axios from 'axios';
 import { USER_NAME, PHONE_NUMBER, EMAIL, POST_URL, LABEL_COL, WRAPPER_COL } from './constants';
 import './Form.less';
@@ -21,8 +22,27 @@ const initialValue = {
 
 const Form: FC = () => {
   const [hasError, setError] = useState<boolean | null>(null);
+  const isSms = true;
+
+  const currentDate: Date = new Date();
+  const [SMSResendTimer, setSMSResendTimer] = useState(
+    Math.round(
+      //@ts-ignore
+      (JSON.parse(localStorage.getItem('finishDate')) - currentDate) / 1000
+    )
+  );
+
+  if (SMSResendTimer > 0 && SMSResendTimer < 60) {
+    setInterval(() => {
+      setSMSResendTimer(SMSResendTimer - 1);
+    }, 1000);
+  }
 
   const sendFormData = async (formData: FormData) => {
+    const date: Date = new Date();
+    const finishDate = date.setSeconds(date.getSeconds() + 60);
+
+    localStorage.setItem('finishDate', JSON.stringify(finishDate));
     try {
       await axios.post(POST_URL, formData);
       setError(false);
@@ -36,6 +56,10 @@ const Form: FC = () => {
     const [key, value] = formDataEntries[0];
 
     localStorage.setItem(key, value);
+  };
+
+  const onSearch = () => {
+    console.log(11);
   };
 
   if (hasError !== null) {
@@ -57,9 +81,13 @@ const Form: FC = () => {
         <FormItem name={EMAIL} placeholder="E-mail" />
       </div>
       <div className="form-row">
-        <Button type="primary" htmlType="submit">
-          Отправить заявку
-        </Button>
+        {isSms ? (
+          <Button type="primary" htmlType="submit">
+            Отправить заявку {SMSResendTimer}
+          </Button>
+        ) : (
+          <Search placeholder="SMS-код" enterButton=">" size="large" onSearch={onSearch} />
+        )}
         <p className="form-description">
           Нажимая на кнопку «Отправить заявку», вы соглашаетесь на обработку персональных данных
         </p>

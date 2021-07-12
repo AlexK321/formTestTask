@@ -5,3 +5,4 @@ export const POST_URL = 'https://jsonplaceholder.typicode.com/posts';
 export const LABEL_COL = { span: 8 };
 export const WRAPPER_COL = { span: 16 };
 export const FILLED = 'filled';
+export const CORRECT_SMS_CODE = 1111;
