@@ -10,7 +10,7 @@ Object.defineProperty(window, 'matchMedia', {
   }),
 });
 
-//Object.fromEntries = (l) => l.reduce((a, [k, v]) => ({ ...a, [k]: v }), {});
+Object.fromEntries = (l) => l.reduce((a, [k, v]) => ({ ...a, [k]: v }), {});
 
 Object.defineProperty(window, 'localStorage', {
   value: {

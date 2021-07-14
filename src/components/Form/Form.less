@@ -32,7 +32,15 @@
       width: 48%;
       max-width: 100%;
     }
-    .ant-btn {
+    .ant-btn-link {
+      color: #00b4e3;
+      height: 53px;
+      span {
+        white-space: pre-wrap;
+        width: 150px;
+      }
+    }
+    .ant-btn-primary {
       border: 1px solid #00b4e3;
       background-color: #00b4e3;
       border-radius: 8px;
@@ -60,9 +68,40 @@
         align-items: center;
       }
     }
+    .ant-input-group-wrapper {
+      width: auto;
+      margin-right: 75px;
+    }
   }
   .ant-input {
     border-radius: 4px;
     padding: 25px 18px 4px 11px;
+  }
+  .sms-field {
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 90px;
+    .sms-warning {
+      width: 165px;
+      margin: 0 auto;
+      font-size: 13px;
+      line-height: 1rem;
+      color: red;
+      margin-top: 5px;
+      text-align: center;
+    }
+  }
+  .error {
+    input {
+      border-color: #f5222d;
+    }
+    .ant-btn-primary {
+      background-color: #f5222d;
+      border-color: #f5222d;
+    }
+    .ant-btn-primary:hover {
+      background-color: #c71d25;
+      border-color: #c71d25;
+    }
   }
 }

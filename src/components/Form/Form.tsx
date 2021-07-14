@@ -1,12 +1,24 @@
 import React, { FC, useState } from 'react';
-import { Form as FormComponent, Button } from 'antd';
-import Search from 'antd/lib/input/Search';
+import { Form as FormComponent } from 'antd';
 import axios from 'axios';
-import { USER_NAME, PHONE_NUMBER, EMAIL, POST_URL, LABEL_COL, WRAPPER_COL } from './constants';
+import {
+  USER_NAME,
+  PHONE_NUMBER,
+  EMAIL,
+  POST_URL,
+  LABEL_COL,
+  WRAPPER_COL,
+  CORRECT_SMS_CODE,
+  TIME_DELAY,
+} from './constants';
 import './Form.less';
 import SubmitResult from '../SubmitResult/SubmitResult';
+import ErrorState from '../ErrorState/ErrorState';
 import FormItem from '../FormItem/FormItem';
+import SubmitBlock from '../SubmitBlock/SubmitBlock';
+import SMSBlock from '../SMSBlock/SMSBlock';
 import getInitialValues from './getInitialValue';
+import useSMSResendTimer from '../../hooks/useSMSResendTimer';
 
 interface FormData {
   email?: string;
@@ -19,35 +31,31 @@ const initialValue = {
   phoneNumber: localStorage.getItem(PHONE_NUMBER) || '',
   email: localStorage.getItem(EMAIL) || '',
 };
+let formDataValues: FormData = {};
 
 const Form: FC = () => {
-  const [hasError, setError] = useState<boolean | null>(null);
-  const isSms = true;
+  const [error, setError] = useState<string | null>();
+  const [hasError, setHasError] = useState<boolean | null>(null);
+  const [isSMSItem, setSMSItem] = useState<boolean | null>(true);
+  const [counterSMS, setCounterSMS] = useState<number>(0);
 
-  const currentDate: Date = new Date();
-  const [SMSResendTimer, setSMSResendTimer] = useState(
-    Math.round(
-      //@ts-ignore
-      (JSON.parse(localStorage.getItem('finishDate')) - currentDate) / 1000
-    )
-  );
+  const SMSResendTimer = useSMSResendTimer();
 
-  if (SMSResendTimer > 0 && SMSResendTimer < 60) {
-    setInterval(() => {
-      setSMSResendTimer(SMSResendTimer - 1);
-    }, 1000);
-  }
-
-  const sendFormData = async (formData: FormData) => {
+  const setTimeDelay = (formData: FormData) => {
     const date: Date = new Date();
-    const finishDate = date.setSeconds(date.getSeconds() + 60);
+    const finishDate = date.setSeconds(date.getSeconds() + TIME_DELAY);
 
     localStorage.setItem('finishDate', JSON.stringify(finishDate));
+    setSMSItem(false);
+    formDataValues = formData;
+  };
+
+  const sendFormData = async (formData: FormData) => {
     try {
       await axios.post(POST_URL, formData);
-      setError(false);
-    } catch (error) {
-      setError(true);
+      setHasError(false);
+    } catch (err) {
+      setHasError(true);
     }
   };
 
@@ -58,20 +66,38 @@ const Form: FC = () => {
     localStorage.setItem(key, value);
   };
 
-  const onSearch = () => {
-    console.log(11);
+  const onSearch = async (SMSCode: string) => {
+    try {
+      const response = await axios.post(POST_URL, { SMSCode });
+
+      if (response.data.SMSCode === CORRECT_SMS_CODE) {
+        sendFormData(formDataValues);
+      } else {
+        setCounterSMS(counterSMS + 1);
+        const smsField = document.getElementById('smsField');
+
+        smsField?.classList.add('error');
+
+        if (counterSMS === 2) {
+          setSMSItem(true);
+          setCounterSMS(0);
+        }
+      }
+    } catch (err) {
+      setError(err);
+    }
   };
 
-  if (hasError !== null) {
-    return <SubmitResult hasError={hasError} />;
-  }
+  if (error) return <ErrorState error={error} />;
+
+  if (hasError !== null) return <SubmitResult hasError={hasError} />;
 
   return (
     <FormComponent
       labelCol={LABEL_COL}
       wrapperCol={WRAPPER_COL}
       initialValues={getInitialValues(initialValue)}
-      onFinish={sendFormData}
+      onFinish={setTimeDelay}
       onValuesChange={handleChange}
     >
       <h2>Контакты</h2>
@@ -80,18 +106,16 @@ const Form: FC = () => {
         <FormItem name={PHONE_NUMBER} placeholder="Телефон" />
         <FormItem name={EMAIL} placeholder="E-mail" />
       </div>
-      <div className="form-row">
-        {isSms ? (
-          <Button type="primary" htmlType="submit">
-            Отправить заявку {SMSResendTimer}
-          </Button>
-        ) : (
-          <Search placeholder="SMS-код" enterButton=">" size="large" onSearch={onSearch} />
-        )}
-        <p className="form-description">
-          Нажимая на кнопку «Отправить заявку», вы соглашаетесь на обработку персональных данных
-        </p>
-      </div>
+      {isSMSItem ? (
+        <SubmitBlock SMSResendTimer={SMSResendTimer} />
+      ) : (
+        <SMSBlock
+          counterSMS={counterSMS}
+          onSearch={onSearch}
+          setSMSItem={setSMSItem}
+          setCounterSMS={setCounterSMS}
+        />
+      )}
     </FormComponent>
   );
 };
