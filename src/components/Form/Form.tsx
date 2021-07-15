@@ -31,16 +31,16 @@ const initialValue = {
 let formDataValues: FormData = {};
 
 const Form: FC = () => {
-  const [error, setError] = useState<string | null>();
+  const [error, setError] = useState<string | null>('');
   const [hasError, setHasError] = useState<boolean | null>(null);
-  const [isSMSItem, setSMSItem] = useState<boolean | null>(true);
+  const [isSMSItem, setSMSItem] = useState<boolean | null>(false);
   const [counterSMS, setCounterSMS] = useState<number>(0);
 
   const SMSResendTimer = useSMSResendTimer();
 
   const onFormButtonClick = (formData: FormData) => {
     setTimeDelay();
-    setSMSItem(false);
+    setSMSItem(true);
     formDataValues = formData;
   };
 
@@ -52,12 +52,9 @@ const Form: FC = () => {
         sendFormData(formDataValues, setHasError);
       } else {
         setCounterSMS(counterSMS + 1);
-        const smsField = document.getElementById('smsField');
-
-        smsField?.classList.add('error');
 
         if (counterSMS === 2) {
-          setSMSItem(true);
+          setSMSItem(false);
           setCounterSMS(0);
         }
       }
@@ -84,7 +81,7 @@ const Form: FC = () => {
         <FormItem name={PHONE_NUMBER} placeholder="Телефон" />
         <FormItem name={EMAIL} placeholder="E-mail" />
       </div>
-      {isSMSItem ? (
+      {!isSMSItem ? (
         <SubmitBlock SMSResendTimer={SMSResendTimer} />
       ) : (
         <SMSBlock

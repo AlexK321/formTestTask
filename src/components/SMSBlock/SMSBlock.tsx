@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import './SMSBlock.less';
 import { Button } from 'antd';
 import Search from 'antd/lib/input/Search';
+import classNames from 'classnames';
 
 interface ParamTypes {
   counterSMS: number;
@@ -11,8 +12,10 @@ interface ParamTypes {
 }
 
 const SMSBlock: FC<ParamTypes> = ({ counterSMS, onSearch, setSMSItem, setCounterSMS }) => {
+  const SMsBlockClass = classNames('form-row', 'sms-field', { 'error-class': counterSMS > 0 });
+
   return (
-    <div className="form-row sms-field" id="smsField">
+    <div className={SMsBlockClass} id="smsField">
       <div>
         <Search placeholder="SMS-код" enterButton=">" size="large" onSearch={onSearch} />
         {counterSMS > 0 && (
@@ -22,7 +25,7 @@ const SMSBlock: FC<ParamTypes> = ({ counterSMS, onSearch, setSMSItem, setCounter
       <Button
         type="link"
         onClick={() => {
-          setSMSItem(true);
+          setSMSItem(false);
           setCounterSMS(0);
         }}
       >
