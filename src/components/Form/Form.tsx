@@ -9,7 +9,6 @@ import {
   LABEL_COL,
   WRAPPER_COL,
   CORRECT_SMS_CODE,
-  TIME_DELAY,
 } from './constants';
 import './Form.less';
 import SubmitResult from '../SubmitResult/SubmitResult';
@@ -18,13 +17,11 @@ import FormItem from '../FormItem/FormItem';
 import SubmitBlock from '../SubmitBlock/SubmitBlock';
 import SMSBlock from '../SMSBlock/SMSBlock';
 import getInitialValues from './getInitialValue';
+import handleChange from './handleChange';
+import sendFormData from './sendFormData';
+import setTimeDelay from './setTimeDelay';
 import useSMSResendTimer from '../../hooks/useSMSResendTimer';
-
-interface FormData {
-  email?: string;
-  phoneNumber?: string;
-  userName?: string;
-}
+import { FormData } from './interface';
 
 const initialValue = {
   userName: localStorage.getItem(USER_NAME) || '',
@@ -41,37 +38,18 @@ const Form: FC = () => {
 
   const SMSResendTimer = useSMSResendTimer();
 
-  const setTimeDelay = (formData: FormData) => {
-    const date: Date = new Date();
-    const finishDate = date.setSeconds(date.getSeconds() + TIME_DELAY);
-
-    localStorage.setItem('finishDate', JSON.stringify(finishDate));
+  const onFormButtonClick = (formData: FormData) => {
+    setTimeDelay();
     setSMSItem(false);
     formDataValues = formData;
   };
 
-  const sendFormData = async (formData: FormData) => {
-    try {
-      await axios.post(POST_URL, formData);
-      setHasError(false);
-    } catch (err) {
-      setHasError(true);
-    }
-  };
-
-  const handleChange = (formData: FormData): void => {
-    const formDataEntries = Object.entries(formData);
-    const [key, value] = formDataEntries[0];
-
-    localStorage.setItem(key, value);
-  };
-
-  const onSearch = async (SMSCode: string) => {
+  const onSubmit = async (SMSCode: string): Promise<void> => {
     try {
       const response = await axios.post(POST_URL, { SMSCode });
 
       if (response.data.SMSCode === CORRECT_SMS_CODE) {
-        sendFormData(formDataValues);
+        sendFormData(formDataValues, setHasError);
       } else {
         setCounterSMS(counterSMS + 1);
         const smsField = document.getElementById('smsField');
@@ -97,7 +75,7 @@ const Form: FC = () => {
       labelCol={LABEL_COL}
       wrapperCol={WRAPPER_COL}
       initialValues={getInitialValues(initialValue)}
-      onFinish={setTimeDelay}
+      onFinish={onFormButtonClick}
       onValuesChange={handleChange}
     >
       <h2>Контакты</h2>
@@ -111,7 +89,7 @@ const Form: FC = () => {
       ) : (
         <SMSBlock
           counterSMS={counterSMS}
-          onSearch={onSearch}
+          onSearch={onSubmit}
           setSMSItem={setSMSItem}
           setCounterSMS={setCounterSMS}
         />

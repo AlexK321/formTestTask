@@ -1,10 +1,5 @@
 import { FILLED } from './constants';
-
-interface FormData {
-  email?: string;
-  phoneNumber?: string;
-  userName?: string;
-}
+import { FormData } from './interface';
 
 export const changeInitialValue = (formData: FormData, filled: number): FormData => {
   const filteredFormData = Object.entries(formData).slice(0, filled);
