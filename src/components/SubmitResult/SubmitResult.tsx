@@ -1,16 +1,12 @@
 import React, { FC } from 'react';
 import './SubmitResult.less';
 
-interface ParamTypes {
-  hasError?: boolean;
-}
-
-const SubmitResult: FC<ParamTypes> = ({ hasError }) => {
-  const description = hasError ? `Данные формы не отправлены` : `Данные формы отправлены успешно`;
-
+const SubmitResult: FC = () => {
   return (
-    <div className="result-block">
-      <h2>{description}</h2>
+    <div className="result-wrapper">
+      <div className="result-block">
+        <h2>Данные формы отправлены успешно</h2>
+      </div>
     </div>
   );
 };

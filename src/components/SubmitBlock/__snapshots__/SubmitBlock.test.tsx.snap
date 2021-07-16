@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: SubmitBlock match snapshot component 1`] = `
+<div
+  className="form-row"
+>
+  <Button
+    disabled={true}
+    htmlType="submit"
+    type="primary"
+  >
+    Отправить заявку 
+    через 20 сек.
+  </Button>
+  <p
+    className="form-description"
+  >
+    Нажимая на кнопку «Отправить заявку», вы соглашаетесь на обработку персональных данных
+  </p>
+</div>
+`;

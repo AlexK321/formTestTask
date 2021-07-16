@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: SMSBlock match snapshot component 1`] = `
+<div
+  className="form-row sms-field"
+  id="smsField"
+>
+  <div>
+    <Search
+      enterButton=">"
+      onSearch={[Function]}
+      placeholder="SMS-код"
+      size="large"
+    />
+  </div>
+  <Button
+    onClick={[Function]}
+    type="link"
+  >
+    Отправить еще раз или изменить номер
+  </Button>
+</div>
+`;

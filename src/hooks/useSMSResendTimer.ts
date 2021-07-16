@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { TIME_DELAY } from '../components/Form/constants';
+import { TIME_DELAY, MILLISECONDS } from '../components/Form/constants';
 
 const useSMSResendTimer = (): number => {
   const currentDate: Date = new Date();
@@ -7,18 +7,22 @@ const useSMSResendTimer = (): number => {
   const [SMSResendTimer, setSMSResendTimer] = useState<number>(0);
 
   useEffect(() => {
-    setSMSResendTimer(
-      Math.round(
-        //@ts-ignore
-        (JSON.parse(localStorage.getItem('finishDate')) - currentDate) / 1000
-      )
-    );
+    const SMSResendTime =
+      //@ts-ignore
+      (JSON.parse(localStorage.getItem('finishDate')) - currentDate) / MILLISECONDS;
+
+    setSMSResendTimer(Math.round(SMSResendTime));
+    let timer: ReturnType<typeof setTimeout>;
 
     if (SMSResendTimer > 0 && SMSResendTimer < TIME_DELAY) {
-      setTimeout(() => {
-        setSMSResendTimer(SMSResendTimer - 1);
-      }, 1000);
+      timer = setTimeout(() => {
+        setSMSResendTimer((previousSMSResendTimer) => previousSMSResendTimer + 1);
+      }, MILLISECONDS);
     }
+
+    return () => {
+      clearTimeout(timer);
+    };
   });
 
   return SMSResendTimer;

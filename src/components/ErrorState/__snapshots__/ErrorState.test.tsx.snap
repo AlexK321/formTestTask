@@ -2,20 +2,14 @@
 
 exports[`Component: ErrorState match snapshot component 1`] = `
 <div
-  className="error-block"
+  className="error-wrapper"
 >
-  <h2>
-    Что-то пошло не так
-  </h2>
-</div>
-`;
-
-exports[`Component: SubmitResult match snapshot component 1`] = `
-<div
-  className="error-block"
->
-  <h2>
-    Что-то пошло не так
-  </h2>
+  <div
+    className="error-block"
+  >
+    <h2>
+      Что-то пошло не так
+    </h2>
+  </div>
 </div>
 `;

@@ -1,34 +1,39 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import './SMSBlock.less';
 import { Button } from 'antd';
 import Search from 'antd/lib/input/Search';
 import classNames from 'classnames';
 import axios from 'axios';
-import { CORRECT_SMS_CODE, POST_URL } from '../Form/constants';
-import ErrorState from '../ErrorState/ErrorState';
+import { CORRECT_SMS_CODE, MAX_ATTEMPTS_SMS_CODE, POST_URL } from '../Form/constants';
+import Context from '../../Context';
+import SubmitResult from '../SubmitResult/SubmitResult';
+import { FormData } from '../../Types/interfaces';
 
 interface ParamTypes {
-  setSMSItem: (arg0: boolean) => void;
-  sendFormData: () => Promise<void>;
+  setSMSBlock: (arg0: boolean) => void;
+  formDataValues: FormData;
 }
 
-const SMSBlock: FC<ParamTypes> = ({ setSMSItem, sendFormData }) => {
-  const [error, setError] = useState<string | null>('');
-  const [counterSMS, setCounterSMS] = useState<number>(0);
-  const SMsBlockClass = classNames('form-row', 'sms-field', { 'error-class': counterSMS > 0 });
+const SMSBlock: FC<ParamTypes> = ({ setSMSBlock, formDataValues }) => {
+  const [counterSMSCode, setCounterSMSCode] = useState<number>(0);
+  const [isSubmitResult, setSubmitResult] = useState<boolean | null>(false);
+  const setError = useContext(Context);
 
   const onSubmit = async (SMSCode: string): Promise<void> => {
     try {
-      const response = await axios.post(POST_URL, { SMSCode });
+      const response = await axios.post(POST_URL, {
+        smsCode: SMSCode,
+        formData: formDataValues,
+      });
 
-      if (response.data.SMSCode === CORRECT_SMS_CODE) {
-        sendFormData();
+      if (response.data.smsCode === CORRECT_SMS_CODE) {
+        setSubmitResult(true);
       } else {
-        setCounterSMS(counterSMS + 1);
+        setCounterSMSCode((previousCounter) => previousCounter + 1);
 
-        if (counterSMS === 2) {
-          setSMSItem(false);
-          setCounterSMS(0);
+        if (counterSMSCode === 2) {
+          setSMSBlock(false);
+          setCounterSMSCode(0);
         }
       }
     } catch (err) {
@@ -36,21 +41,23 @@ const SMSBlock: FC<ParamTypes> = ({ setSMSItem, sendFormData }) => {
     }
   };
 
-  if (error) return <ErrorState error={error} />;
+  if (isSubmitResult) return <SubmitResult />;
+
+  const attemptsSMSCode = MAX_ATTEMPTS_SMS_CODE - counterSMSCode;
 
   return (
-    <div className={SMsBlockClass} id="smsField">
+    <div className={classNames('form-row sms-field', { 'error-class': counterSMSCode > 0 })}>
       <div>
         <Search placeholder="SMS-код" enterButton=">" size="large" onSearch={onSubmit} />
-        {counterSMS > 0 && (
-          <p className="sms-warning">Неправильный код. Осталось {3 - counterSMS} попытки.</p>
+        {counterSMSCode > 0 && (
+          <p className="sms-warning">Неправильный код. Осталось {attemptsSMSCode} попытки.</p>
         )}
       </div>
       <Button
         type="link"
         onClick={() => {
-          setSMSItem(false);
-          setCounterSMS(0);
+          setSMSBlock(false);
+          setCounterSMSCode(0);
         }}
       >
         Отправить еще раз или изменить номер

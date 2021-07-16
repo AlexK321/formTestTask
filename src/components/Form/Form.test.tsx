@@ -56,14 +56,6 @@ describe('Component: Form', () => {
     });
   });
 
-  it('should render title', () => {
-    const consentDataProcessing =
-      'Нажимая на кнопку «Отправить заявку», вы соглашаетесь на обработку персональных данных';
-    const wrapper = component.find('.form-description');
-
-    expect(wrapper.text()).toBe(consentDataProcessing);
-  });
-
   it('should render button', () => {
     const button = component.find('Button');
 
