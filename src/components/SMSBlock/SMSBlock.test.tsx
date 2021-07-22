@@ -1,136 +1,107 @@
-// import React from 'react';
-// import { shallow, ShallowWrapper } from 'enzyme';
-// import axios from 'axios';
-// import SMSBlock from './SMSBlock';
-// import { FormData } from '../../Types/interfaces';
-// import SubmitResult from '../SubmitResult/SubmitResult';
-// //import SubmitResult from '../SubmitResult/SubmitResult';
-// //import { CORRECT_SMS_CODE } from '../Form/constants';
+import React from 'react';
+import { shallow, ShallowWrapper } from 'enzyme';
+import axios from 'axios';
+import SMSBlock from './SMSBlock';
+import { FormData } from '../../Types/interfaces';
+import SubmitResult from '../SubmitResult/SubmitResult';
+import { CORRECT_SMS_CODE } from '../Form/constants';
 
-// interface ParamTypes {
-//   setSMSBlock: (arg0: boolean) => void;
-//   formDataValues?: FormData;
-// }
+interface ParamTypes {
+  setSMSBlock: (arg0: boolean) => void;
+  formDataValues?: FormData;
+}
 
-// jest.mock('axios');
+jest.mock('axios');
 
-// describe('Component: SMSBlock', () => {
-//   const testProps: ParamTypes = {
-//     setSMSBlock: jest.fn(),
-//     formDataValues: {
-//       userName: 'test',
-//       phoneNumber: 'test',
-//       email: 'test',
-//     },
-//   };
+describe('Component: SMSBlock', () => {
+  const testProps: ParamTypes = {
+    setSMSBlock: jest.fn(),
+    formDataValues: {
+      userName: 'test',
+      phoneNumber: 'test',
+      email: 'test',
+    },
+  };
+  //@ts-ignore
+  const setUp = (props?: ParamTypes) => shallow(<SMSBlock {...props} />);
+  let component: ShallowWrapper;
 
-//   const setUp = (props?: ParamTypes) => shallow(<SMSBlock {...props} />);
-//   let component: ShallowWrapper;
+  beforeEach(() => {
+    component = setUp(testProps);
+  });
 
-//   beforeEach(() => {
-//     component = setUp(testProps);
-//   });
+  afterEach(() => {
+    component = setUp(testProps);
+  });
 
-//   it('match snapshot component', () => {
-//     expect(component).toMatchSnapshot();
-//   });
+  it('match snapshot component', () => {
+    expect(component).toMatchSnapshot();
+  });
 
-//   it('should call setSMSBlock', () => {
-//     const button = component.find('Button');
+  it('should call setSMSBlock', () => {
+    const button = component.find('Button');
 
-//     button.simulate('click');
-//     expect(testProps.setSMSBlock).toHaveBeenCalledTimes(1);
-//   });
+    button.simulate('click');
+    expect(testProps.setSMSBlock).toHaveBeenCalledTimes(1);
+  });
 
-//   // describe('when call onSearch', () => {
-//   //   beforeEach(() => {
-//   //     const search = component.find('Search');
+  describe('when the SMS code is correct', () => {
+    beforeEach(() => {
+      (axios.post as jest.Mock).mockResolvedValue({ data: { smsCode: CORRECT_SMS_CODE } });
+    });
 
-//   //     search.simulate('search');
-//   //   });
+    describe('when form is finished with result ', () => {
+      beforeEach(() => {
+        const search = component.find('Search');
 
-//   //   describe('when form is finished with result ', () => {
-//   //     beforeEach(() => {
-//   //       const search = component.find('Search');
+        search.simulate('search');
+      });
 
-//   //       search.simulate('search');
-//   //     });
+      it('should render SubmitResult', () => {
+        expect(component.find(SubmitResult)).toHaveLength(1);
+      });
+    });
+  });
 
-//   //     it('should render SubmitResult', () => {
-//   //       console.log(component.debug());
-//   //       expect(component.find(SubmitResult)).toHaveLength(1);
-//   //     });
-//   //   });
-//   // });
+  describe('when the SMS code is incorrect', () => {
+    beforeEach(() => {
+      (axios.post as jest.Mock).mockResolvedValue({ data: { smsCode: '1112' } });
+      const search = component.find('Search');
 
-//   // test onSearch
-//   describe('when request status exists', () => {
-//     beforeEach(() => {
-//       (axios.post as jest.Mock).mockResolvedValue({ data: { smsCode: '1111' } });
-//       component = setUp(testProps);
-//     });
+      search.simulate('search');
+      search.simulate('search');
+    });
 
-//     describe('when form is finished with result ', () => {
-//       beforeEach(() => {
-//         const search = component.find('Search');
+    it('should render sms-warning', () => {
+      const description = component.find('.sms-warning');
 
-//         search.simulate('search');
-//       });
+      expect(description.text()).toEqual('Неправильный код. Осталось 1 попытки.');
+    });
 
-//       it('should render SubmitResult', () => {
-//         console.log(component.debug());
-//         expect(component.find(SubmitResult)).toHaveLength(1);
-//       });
-//     });
-//   });
+    describe('when SMS submit = 3', () => {
+      beforeEach(() => {
+        const search = component.find('Search');
 
-//   xdescribe('when request ///', () => {
-//     beforeEach(() => {
-//       (axios.post as jest.Mock).mockRejectedValue('test error');
-//     });
-//     component = setUp(testProps);
-//     const search = component.find('Search');
+        search.simulate('search');
+      });
 
-//     describe('when form is finished with result ', () => {
-//       beforeEach(() => {
-//         search.simulate('search');
-//       });
+      it('should unmount SMS block ', () => {
+        expect(testProps.setSMSBlock).toHaveBeenCalledTimes(1);
+        expect(component.text()).not.toContain('sms-warning');
+      });
+    });
+  });
 
-//       it('should render SubmitResult', () => {
-//         expect(component).toEqual({});
-//       });
-//     });
-//   });
+  describe('when server error', () => {
+    beforeEach(() => {
+      (axios.post as jest.Mock).mockRejectedValue('test error');
+      const search = component.find('Search');
 
-//   describe('when request status exists', () => {
-//     beforeEach(() => {
-//       (axios.post as jest.Mock).mockResolvedValue({ data: { smsCode: '1112' } });
-//       component = setUp(testProps);
-//     });
+      search.simulate('search');
+    });
 
-//     describe('when form is finished with result ', () => {
-//       beforeEach(() => {
-//         const search = component.find('Search');
-
-//         search.simulate('search');
-//         search.simulate('search');
-//         //search.simulate('search');
-//       });
-
-//       it('should render SubmitResult', () => {
-//         // const search = component.find('Search');
-
-//         // search.simulate('search');
-//         // search.simulate('search');
-//         // search.simulate('search');
-
-//         const description = component.find('.sms-warning');
-
-//         console.log(description.debug());
-//         console.log(description.children().debug());
-//         //expect(1).toEqual(1);
-//         expect(description.text()).toEqual('Неправильный код. Осталось попытки.');
-//       });
-//     });
-//   });
-// });
+    it('should render SubmitResult', () => {
+      expect(component).toEqual({}); // как проверить демонтирование всей компоненты ?
+    });
+  });
+});
