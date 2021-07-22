@@ -1,23 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Component: App should match snapshot 1`] = `
-<div
-  className="wrapper"
+<ContextProvider
+  value={[Function]}
 >
   <div
-    className="form-wrapper"
+    className="wrapper"
   >
-    <h1
-      className="form-title"
+    <div
+      className="form-wrapper"
     >
-      Заявка на участие
-    </h1>
-    <h2
-      className="form-description"
-    >
-      Расскажите о проекте, его ценности для бизнеса, оставьте информацию о компании и контакты,чтобы мы могли с вами связаться
-    </h2>
-    <Form />
+      <h1
+        className="form-title"
+      >
+        Заявка на участие
+      </h1>
+      <h2
+        className="form-description"
+      >
+        Расскажите о проекте, его ценности для бизнеса, оставьте информацию о компании и контакты,чтобы мы могли с вами связаться
+      </h2>
+      <Form />
+    </div>
   </div>
-</div>
+</ContextProvider>
 `;

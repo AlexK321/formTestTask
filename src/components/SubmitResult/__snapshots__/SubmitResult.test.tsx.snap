@@ -2,30 +2,14 @@
 
 exports[`Component: SubmitResult match snapshot component 1`] = `
 <div
-  className="result-block"
+  className="result-wrapper"
 >
-  <h2>
-    Данные формы отправлены успешно
-  </h2>
-</div>
-`;
-
-exports[`Component: SubmitResult snapshot component 1`] = `
-<div
-  className="result-block"
->
-  <h2>
-    Данные формы отправлены успешно
-  </h2>
-</div>
-`;
-
-exports[`Component: SubmitResult when render elements snapshot component 1`] = `
-<div
-  className="result-block"
->
-  <h2>
-    Данные формы отправлены успешно
-  </h2>
+  <div
+    className="result-block"
+  >
+    <h2>
+      Данные формы отправлены успешно
+    </h2>
+  </div>
 </div>
 `;

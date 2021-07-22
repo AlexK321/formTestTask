@@ -8,4 +8,4 @@ export const FILLED_SEARCH_QUERY = 'filled';
 export const CORRECT_SMS_CODE = '1111';
 export const TIME_DELAY = 20;
 export const MILLISECONDS = 1000;
-export const MAX_ATTEMPTS_SMS_CODE = 3;
+export const MAX_SMS_CODE_ATTEMPTS = 3;

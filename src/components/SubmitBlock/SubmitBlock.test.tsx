@@ -6,7 +6,7 @@ describe('Component: SubmitBlock', () => {
   let component: ShallowWrapper;
 
   beforeEach(() => {
-    component = shallow(<SubmitBlock SMSResendTimer={20} />);
+    component = shallow(<SubmitBlock recoveryTime={20} />);
   });
 
   it('match snapshot component', () => {
