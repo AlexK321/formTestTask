@@ -1,8 +1,7 @@
 import React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import axios from 'axios';
 import Form from './Form';
-import SubmitResult from '../SubmitResult/SubmitResult';
+import SMSBlock from '../SMSBlock/SMSBlock';
 
 jest.mock('axios');
 
@@ -13,53 +12,14 @@ describe('Component: Form', () => {
     component = shallow(<Form />);
   });
 
-  describe('when request status exists', () => {
-    const status = 200;
-
+  describe('when submit form (press submit button)', () => {
     beforeEach(() => {
-      (axios.post as jest.Mock).mockResolvedValue({ status });
+      component.simulate('finish');
     });
 
-    describe('when form is finished with result ', () => {
-      beforeEach(() => {
-        component.simulate('finish');
-      });
-
-      it('should render SubmitResult', () => {
-        const submitResult = component.find(SubmitResult);
-
-        expect(submitResult).toHaveLength(0); //!!!
-        //expect(submitResult.props()).toStrictEqual({ hasError: false });
-      });
+    it('should render SMSBlock', () => {
+      expect(component.find(SMSBlock)).toHaveLength(1);
     });
-  });
-
-  describe('when reject status exists', () => {
-    const status = 404;
-
-    beforeEach(() => {
-      (axios.post as jest.Mock).mockRejectedValue({ status });
-      component.update();
-    });
-
-    describe('when form is finished with result ', () => {
-      beforeEach(() => {
-        component.simulate('finish');
-      });
-
-      it('should render SubmitResult', () => {
-        const submitResult = component.find(SubmitResult);
-
-        expect(submitResult).toHaveLength(0); // !!!
-        //expect(submitResult.props()).toStrictEqual({ hasError: true });
-      });
-    });
-  });
-
-  it('should render button', () => {
-    const button = component.find('Button');
-
-    expect(button).not.toBeNull();
   });
 
   describe('when change input', () => {

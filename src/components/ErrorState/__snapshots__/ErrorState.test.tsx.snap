@@ -10,6 +10,9 @@ exports[`Component: ErrorState match snapshot component 1`] = `
     <h2>
       Что-то пошло не так
     </h2>
+    <p>
+      error test
+    </p>
   </div>
 </div>
 `;

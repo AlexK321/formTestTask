@@ -11,7 +11,9 @@ describe('Component: ErrorState', () => {
   let component: ShallowWrapper;
 
   beforeEach(() => {
-    component = setUp();
+    const errorProps = { error: 'error test' };
+
+    component = setUp(errorProps);
   });
 
   it('match snapshot component', () => {
@@ -19,11 +21,8 @@ describe('Component: ErrorState', () => {
   });
 
   it('should render error text', () => {
-    const errorText = 'error test text';
-
-    component = shallow(<ErrorState error={errorText} />);
     const errorBlock = component.find('p');
 
-    expect(errorBlock.text()).toBe(errorText);
+    expect(errorBlock.text()).toBe('error test');
   });
 });

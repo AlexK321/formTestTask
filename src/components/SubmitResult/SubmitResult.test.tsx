@@ -19,14 +19,4 @@ describe('Component: SubmitResult', () => {
   it('match snapshot component', () => {
     expect(component).toMatchSnapshot();
   });
-
-  // it.each([
-  //   { responseMessage: 'Данные формы не отправлены', hasError: true },
-  //   { responseMessage: 'Данные формы отправлены успешно', hasError: false },
-  // ])('should render negative response', ({ responseMessage, hasError }) => {
-  //   component = shallow(<SubmitResult hasError={hasError} />);
-  //   const description = component.find('h2');
-
-  //   expect(description.text()).toBe(responseMessage);
-  // });
 });
