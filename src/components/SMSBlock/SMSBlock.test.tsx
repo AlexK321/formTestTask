@@ -7,7 +7,7 @@ import SubmitResult from '../SubmitResult/SubmitResult';
 import { CORRECT_SMS_CODE } from '../Form/constants';
 
 interface ParamTypes {
-  setSMSBlock: (arg0: boolean) => void;
+  setSMSBlock?: (arg0: boolean) => void | undefined;
   formDataValues?: FormData;
 }
 
@@ -22,6 +22,7 @@ describe('Component: SMSBlock', () => {
       email: 'test',
     },
   };
+
   //@ts-ignore
   const setUp = (props?: ParamTypes) => shallow(<SMSBlock {...props} />);
   let component: ShallowWrapper;

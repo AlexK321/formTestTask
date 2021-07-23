@@ -3,21 +3,21 @@ import { MILLISECONDS } from '../components/Form/constants';
 
 const useTimer = (isSMSBlock: boolean | null): number => {
   const [recoveryTime, setRecoveryTime] = useState<number>(0);
-  const timer: MutableRefObject<any> = useRef<number>();
+  const interval: MutableRefObject<any> = useRef();
 
   useEffect(() => {
     const localStorageFinishDate = JSON.parse(localStorage.getItem('finishDate') || '0');
-    const initialRecoveryTime = (localStorageFinishDate - Number(new Date())) / MILLISECONDS;
+    const initialRecoveryTime = (localStorageFinishDate - Number(Date.now())) / MILLISECONDS;
 
     if (initialRecoveryTime > 0) {
       setRecoveryTime(Math.round(initialRecoveryTime));
-      timer.current = setInterval(() => {
+      interval.current = setInterval(() => {
         setRecoveryTime((previousRecoveryTime) => previousRecoveryTime - 1);
       }, MILLISECONDS);
     }
 
     return () => {
-      clearInterval(timer.current);
+      clearInterval(interval.current);
     };
   }, [isSMSBlock]);
 
