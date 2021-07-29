@@ -33,6 +33,7 @@
     "start": "craco start",
     "build": "craco build",
     "lint": "eslint --ext .ts,.tsx src --fix",
+    "test-watch": "craco test --watchAll=false",
     "test": "craco test --coverage",
     "eject": "react-scripts eject"
   },
@@ -69,6 +70,10 @@
     "clearMocks": true,
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!src/index.tsx"
     ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "./__mocks__/fileMock.js",

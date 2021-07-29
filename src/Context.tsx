@@ -1,5 +1,5 @@
-import React from 'react';
+import { createContext, Dispatch, SetStateAction } from 'react';
 
-const Context = React.createContext<any>('');
+const Context = createContext<Dispatch<SetStateAction<string | null>>>(() => null);
 
 export default Context;

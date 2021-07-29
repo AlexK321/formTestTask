@@ -19,7 +19,12 @@ const SMSBlock: FC<ParamTypes> = ({ setSMSBlock, formDataValues }) => {
   const [isSubmitResult, setSubmitResult] = useState<boolean | null>(false);
   const setError = useContext(Context);
 
-  const onSubmit = async (SMSCode: string): Promise<void> => {
+  const openSubmitBlock = () => {
+    setSMSBlock(false);
+    setSMSSubmitCounter(0);
+  };
+
+  const handleSubmit = async (SMSCode: string): Promise<void> => {
     try {
       const response = await axios.post(POST_URL, {
         smsCode: SMSCode,
@@ -31,10 +36,7 @@ const SMSBlock: FC<ParamTypes> = ({ setSMSBlock, formDataValues }) => {
       } else {
         setSMSSubmitCounter((previousCounter) => previousCounter + 1);
 
-        if (SMSSubmitCounter === MAX_SMS_CODE_ATTEMPTS - 1) {
-          setSMSBlock(false);
-          setSMSSubmitCounter(0);
-        }
+        if (SMSSubmitCounter === MAX_SMS_CODE_ATTEMPTS - 1) openSubmitBlock();
       }
     } catch (err) {
       setError(err);
@@ -44,22 +46,17 @@ const SMSBlock: FC<ParamTypes> = ({ setSMSBlock, formDataValues }) => {
   if (isSubmitResult) return <SubmitResult />;
 
   const SMSCodeAttempts = MAX_SMS_CODE_ATTEMPTS - SMSSubmitCounter;
+  const isSMSWarning = Boolean(SMSSubmitCounter > 0);
 
   return (
-    <div className={classNames('form-row sms-field', { 'error-class': SMSSubmitCounter > 0 })}>
+    <div className={classNames('form-row sms-field', { 'error-class': isSMSWarning })}>
       <div>
-        <Search placeholder="SMS-код" enterButton=">" size="large" onSearch={onSubmit} />
-        {SMSSubmitCounter > 0 && (
+        <Search placeholder="SMS-код" enterButton=">" size="large" onSearch={handleSubmit} />
+        {isSMSWarning && (
           <p className="sms-warning">Неправильный код. Осталось {SMSCodeAttempts} попытки.</p>
         )}
       </div>
-      <Button
-        type="link"
-        onClick={() => {
-          setSMSBlock(false);
-          setSMSSubmitCounter(0);
-        }}
-      >
+      <Button type="link" onClick={openSubmitBlock}>
         Отправить еще раз или изменить номер
       </Button>
     </div>

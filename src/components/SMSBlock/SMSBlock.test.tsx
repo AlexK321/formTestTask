@@ -7,7 +7,7 @@ import SubmitResult from '../SubmitResult/SubmitResult';
 import { CORRECT_SMS_CODE } from '../Form/constants';
 
 interface ParamTypes {
-  setSMSBlock?: (arg0: boolean) => void | undefined;
+  setSMSBlock: (isSMSBlock: boolean) => void;
   formDataValues?: FormData;
 }
 
@@ -23,8 +23,7 @@ describe('Component: SMSBlock', () => {
     },
   };
 
-  //@ts-ignore
-  const setUp = (props?: ParamTypes) => shallow(<SMSBlock {...props} />);
+  const setUp = (props: ParamTypes) => shallow(<SMSBlock {...props} />);
   let component: ShallowWrapper;
 
   beforeEach(() => {
@@ -66,7 +65,9 @@ describe('Component: SMSBlock', () => {
 
   describe('when the SMS code is incorrect', () => {
     beforeEach(() => {
-      (axios.post as jest.Mock).mockResolvedValue({ data: { smsCode: '1112' } });
+      const inCorrectSMSCode = '1112';
+
+      (axios.post as jest.Mock).mockResolvedValue({ data: { smsCode: inCorrectSMSCode } });
       const search = component.find('Search');
 
       search.simulate('search');

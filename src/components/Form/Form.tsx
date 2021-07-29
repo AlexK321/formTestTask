@@ -9,7 +9,7 @@ import getInitialValues from './getInitialValue';
 import handleChange from './handleChange';
 import saveTimeDelay from './saveTimeDelay';
 import { FormData } from '../../Types/interfaces';
-import useTimer from '../../hooks/useTimer';
+import useRecoveryTimer from '../../hooks/useRecoveryTimer';
 
 const initialValue = {
   userName: localStorage.getItem(USER_NAME) || '',
@@ -20,7 +20,7 @@ const initialValue = {
 const Form: FC = () => {
   const [isSMSBlock, setSMSBlock] = useState<boolean | null>(false);
   const [formDataValues, setFormDataValues] = useState<FormData>();
-  const recoveryTime = useTimer(isSMSBlock);
+  const recoveryTime = useRecoveryTimer(isSMSBlock);
 
   const onFormButtonClick = (formData: FormData) => {
     saveTimeDelay();

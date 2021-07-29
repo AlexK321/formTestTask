@@ -1,13 +1,13 @@
 import React from 'react';
 import { shallow, ShallowWrapper } from 'enzyme';
-import ErrorState from './ErrorState';
+import ErrorBlock from './ErrorBlock';
 
 interface ParamTypes {
   error: string;
 }
 
-describe('Component: ErrorState', () => {
-  const setUp = (props?: ParamTypes) => shallow(<ErrorState {...props} />);
+describe('Component: ErrorBlock', () => {
+  const setUp = (props?: ParamTypes) => shallow(<ErrorBlock {...props} />);
   let component: ShallowWrapper;
 
   beforeEach(() => {

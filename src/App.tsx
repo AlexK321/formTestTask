@@ -3,12 +3,12 @@ import './App.less';
 import Form from './components/Form/Form';
 import 'antd/dist/antd.less';
 import Context from './Context';
-import ErrorState from './components/ErrorState/ErrorState';
+import ErrorBlock from './components/ErrorBlock/ErrorBlock';
 
 const App = (): ReactElement => {
   const [error, setError] = useState<string | null>('');
 
-  if (error) return <ErrorState error={error} />;
+  if (error) return <ErrorBlock error={error} />;
 
   return (
     <Context.Provider value={setError}>

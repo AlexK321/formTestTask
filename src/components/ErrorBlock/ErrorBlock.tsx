@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
-import './ErrorState.less';
+import './ErrorBlock.less';
 
 interface ParamTypes {
   error?: string;
 }
 
-const ErrorState: FC<ParamTypes> = ({ error }) => {
+const ErrorBlock: FC<ParamTypes> = ({ error }) => {
   return (
     <div className="error-wrapper">
       <div className="error-block">
@@ -16,4 +16,4 @@ const ErrorState: FC<ParamTypes> = ({ error }) => {
   );
 };
 
-export default ErrorState;
+export default ErrorBlock;
